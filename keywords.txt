@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map RCReceiver
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RCReceive	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+initInt	KEYWORD2
+attach	KEYWORD2
+getValue	KEYWORD2
+poll	KEYWORD2
+getNP	KEYWORD2
+hasError	KEYWORD2
+hasNP	KEYWORD2
+getLastRCValue	KEYWORD2
+handleInterrupt	KEYWORD2
+attachInt	KEYWORD2
+detachInt	KEYWORD2
+getMsValue	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################

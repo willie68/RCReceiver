@@ -23,6 +23,12 @@ handleInterrupt	KEYWORD2
 attachInt	KEYWORD2
 detachInt	KEYWORD2
 getMsValue	KEYWORD2
+between	KEYWORD2
+dbgOut	KEYWORD2
+dbgOutLn	KEYWORD2
+dbgOut2	KEYWORD2
+dbgOutLn2	KEYWORD2
+initDebug	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

@@ -1,6 +1,6 @@
 #include <inttypes.h>
 /*
-  RCReceive.h - Auslesen eine RC Empfängers - Version 0.2
+  RCReceive.h - Reading an RC receiver - Version 0.2
   Copyright (c) 2012 Wilfried Klaas.  All right reserved.
 
   This library is free software; you can redistribute it and/or
@@ -20,22 +20,22 @@
 #ifndef RCReceive_h
 #define RCReceive_h
 
-// Dieser Schalter hat nur Auswirkungen bei einem ATTinyx5 Target.
-// Damit wird anstatt der internen micros der Timer 1 verwendet.
+// This switch only affects an ATTinyx5 target.
+// This means that timer 1 is used instead of the internal micros.
 //#define USE_TIMER_1
 
-// Dieser Schalter hat nur Auswirkungen bei einem Arduino Mega (Mega128 oder Mega256) Target.
-// Damit wird anstatt des Timer 1 der Timer 5 verwendet.
+// This switch only affects an Arduino Mega (Mega128 or Mega256) target.
+// This means that timer 5 is used instead of timer 1.
 //#define USE_TIMER_5
 
-// hier folgen nun die verschiedenen Definition für die verschiedenen Targets
-// Der Arduinotyp kann dann mittels #if defined(xxx) abgefragt werden.
-// Mögliche Werte:
-// _RC_UNO_ : steht für alle 328 basierenden Arduinos, also Uno, Duemillanove, Mini, Micro, Nano
-// _RC_LEONARDO : steht für alle 32U4 basierenden Arduinos, da wären Leonardo, oder auch die 32U4 Derivate von anderen  Herstellern
-// _RC_MEGA_ : steht für die Arduinos Megas, also basierend auf dme ATMega128 bzw. ATMega256
-// _RC_TINY_14_ : steht für die ATTinyx4 Serie 
-// _RC_TINY_8_ : steht für die ATTinyx5 Serie 
+// Here are the different definitions for the different targets
+// The arduino type can then be queried using #if defined(xxx).
+// Possible values:
+// _RC_UNO_ : stands for all 328 based Arduinos, i.e.Uno, Duemillanove, Mini, Micro, Nano
+// _RC_LEONARDO : stands for all 32U4 based Arduinos, there would be Leonardo, or also the 32U4 derivatives from other manufacturers
+// _RC_MEGA_ : stands for the Arduinos Megas, i.e. based on dme ATMega128 or ATMega256
+// _RC_TINY_14_ : stands for the ATTinyx4 series
+// _RC_TINY_8_ : stands for the ATTinyx5 series
 #if defined(__AVR_ATmega328P__)
 #define _RC_UNO_
 #endif
@@ -56,22 +56,22 @@
 #define _RC_TINY_8_
 #endif
 
-// Konstanten für die RC Erkennung
-const uint16_t MIN_RC_VALUE = 900; // minimaler Impuls, der noch als gültig erkannt wird
-const uint16_t MAX_RC_VALUE = 2100; // maximaler Implus, der nnch als gültig erkannt wird
+// Constants for RC detection
+const uint16_t MIN_RC_VALUE = 900; // minimum pulse that is still recognized as valid
+const uint16_t MAX_RC_VALUE = 2100; // maximum implus that is still recognized as valid
 const uint8_t MAX_ERROR_COUNT = 3;
 
-// Größe des Pufferspeichers
-const uint8_t stackSize = 10; 
+// size of the buffer memory
+const uint8_t stackSize = 10;
 
 typedef struct  {
   volatile uint16_t stack[stackSize];
-  // Laufvariable des Ringspeichers
+  // Run variable of the ring buffer
   uint8_t index;
 }
 sStack;
 
-// Die Klasse für den Empfänger
+// The class for the recipient
 class RCReceive
 {
 public:
@@ -79,59 +79,59 @@ public:
 
   RCReceive();
 
-  // Empfngerklasse mit Pin verbinden
+  // Connect receiver class with pin
   void attach(uint8_t pin);
 
-  // aktuellen gemittelten Wert besorgen
+  // get current averaged value
   uint8_t getValue();
 
-  // neuen Wert vom Empfänger abfragen
+  // query the new value from the recipient
   uint8_t poll();
 
-  // Nullpunkt holen
+  // Get zero point
   uint8_t getNP();
 
-  // Nullpunkt holen (in us)
+  // get zero point (in us)
   uint16_t getMSNP();
 
-  // Fehler Status, wird 1 wenn mehr als 3 fehlerhafte Impulse vom Empfänger ermittelt worden sind.
+  // Error status, becomes 1 if more than 3 faulty pulses have been determined by the receiver.
   uint8_t hasError();
 
-  // Nullpunkt wurde bestimmt
+  // zero point was determined
   uint8_t hasNP();
 
-  // Letzten gelesenen Wert ausgeben
+  // Output the last value read
   unsigned int getLastRCValue();
 
-  // vereinfachung für die Interruptroutine
+  // simplification for the interrupt routine
   void handleInterrupt();
 
-  // Interruptbetrieb mit interner Iterruptroutie zuweisen
+  // Assign interrupt mode with internal interrupt routine
   void attachInt(uint8_t pin);
 
-  // eigene Interruptroutine zuweisen
+  // assign your own interrupt routine
   void attachInt(void (*handler)(void));
 
-  // Pin und eigene Interruptroutine zuweisen
+  // Assign pin and own interrupt routine
   void attachInt(uint8_t pin, void (*handler)(void));
 
-  // zugewiesenen Interruptroutine lösen
+  // solve the assigned interrupt routine
   void detachInt();
 
-  // aktuellen gemittelten Wert in us besorgen
+  // get the current averaged value in us
   uint16_t getMsValue();
-  
-  // us Wert in byte Wertebereich mappen
+
+  // Map us value in byte value range
   uint8_t mapMsValue(uint16_t value);
-  
+
 protected:
   volatile unsigned int lastValue;
   sStack myStack;
   uint8_t myPin;
   uint8_t nullpoint;
   uint16_t msNullpoint;
-  // die unteren 4 Bit geben die Anzahl der Fehler,
-  // das oberste Bit gibt an, ob der Nullpunkt bestimmt wurde.
+  // the lower 4 bits indicate the number of errors,
+  // The top bit indicates whether the zero point has been determined.
   volatile uint8_t state;
   volatile uint16_t RcTemp;
   bool hasValue;

@@ -23,24 +23,23 @@
 
 const byte PIN_RC = 2; 
 
-// Der Empfänger
 RCReceive rcReceiver;
 
 void setup() {
-  // RC Receiver in Interruptvariante
+  // RC Receiver in Interrupt variant
   rcReceiver.attachInt(PIN_RC);
 
   // put your setup code here, to run once:
 }
 
 void loop() {
-  // nur wenn der Nullpunkt bestimmt worden ist, 
-  // und es keinen Fehler gegeben hat soll die eigentliche Arbeit gemacht werden
+  // only if the zero point has been determined,
+  // and there was no mistake the actual work should be done
   if (rcReceiver.hasNP() && !rcReceiver.hasError()) {
     doWork();
   } 
   else if (rcReceiver.hasError()) {
-    // Fehlerbehandlung failsafe oder sowas...
+    // Failure handling failsafe or something ...
   }
 }
 

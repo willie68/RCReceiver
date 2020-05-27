@@ -1,5 +1,5 @@
 /*
-  makros.cpp - Ein paar nützliche Makros - Version 0.1
+  makros.cpp - A few useful macros - Version 0.1
   Copyright (c) 2012 Wilfried Klaas.  All right reserved.
 
   This library is free software; you can redistribute it and/or

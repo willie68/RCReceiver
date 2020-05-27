@@ -5,19 +5,19 @@
 #include "makros.h"
 #include <avr/interrupt.h>
 /*
-  RCReceive.cpp - Auslesen eine RC Empfängers - Version 0.2
+  RCReceive.cpp - Reading an RC receiver - Version 0.2
  Copyright (c) 2014 Wilfried Klaas.  All right reserved.
- 
+
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2.1 of the License, or (at your option) any later version.
- 
+
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -25,7 +25,7 @@
 
 #define ERROR_MASK 0x0F
 #define HAS_NP 0x80
- 
+
 #define pushRcValue(value) \
 if ((value > MIN_RC_VALUE) && (value < MAX_RC_VALUE)) { \
   this->myStack.stack[this->myStack.index % stackSize] = value; \
@@ -51,7 +51,7 @@ if ((this->state & HAS_NP) == 0) { \
 map(all, MIN_RC_VALUE, MAX_RC_VALUE, 0, 255)
 
 static bool _RCReceiverIsInit = false;
-static RCReceive* __ISR0Receiver, * __ISR1Receiver;  
+static RCReceive* __ISR0Receiver, * __ISR1Receiver;
 
 void __ISR_SWI_0 () {
   __ISR0Receiver->handleInterrupt();
@@ -63,7 +63,7 @@ void __ISR_SWI_1 () {
 
 // Leonardo support
 #if defined(_RC_MEGA_) || defined(_RC_LEONARDO_)
-static RCReceive* __ISR2Receiver, * __ISR3Receiver;  
+static RCReceive* __ISR2Receiver, * __ISR3Receiver;
 void __ISR_SWI_2 () {
   __ISR2Receiver->handleInterrupt();
 }
@@ -74,7 +74,7 @@ void __ISR_SWI_3 () {
 
 // Mega support
 #if defined(_RC_MEGA_)
-static RCReceive* __ISR4Receiver, * __ISR5Receiver;  
+static RCReceive* __ISR4Receiver, * __ISR5Receiver;
 void __ISR_SWI_4 () {
   __ISR4Receiver->handleInterrupt();
 }
@@ -83,7 +83,7 @@ void __ISR_SWI_5 () {
 }
 #endif
 
-// allgemeiner Code ohne Klassenbezug, spezeill für die ATTinyx5 Serie
+// general code without class reference, special for the ATTinyx5 series
 
 #if defined(_RC_TINY_8_)
   #ifdef USE_TIMER_1
@@ -101,34 +101,34 @@ ISR(TIMER1_OVF_vect)
   #endif
 #endif
 
-// Hier beginnt die Receive Klasse
+// This is where the Receive class begins
 RCReceive::RCReceive() {
   this->state = ERROR_MASK;
   this->nullpoint = 0;
 }
 
-// Receiver für Interrupt vorbereiten
+// Prepare receiver for interrupt
 void RCReceive::initInt() {
 #if !defined(_RC_TINY_8_) && !defined(_RC_TINY_14_)
   if (!_RCReceiverIsInit) {
-  #if defined(_RC_UNO_) || defined(_RC_LEONARDO_) 
-    TCNT1 = 0;              // clear the timer count 
+  #if defined(_RC_UNO_) || defined(_RC_LEONARDO_)
+    TCNT1 = 0;              // clear the timer count
     // Initilialise Timer1
     TCCR1A = 0;             // normal counting mode
     TCCR1B = _BV(CS11);     // set prescaler of 8, tick = 0,5us same as in the Servo Lib...
     TIFR1 |= _BV(OCF1A);     // clear any pending interrupts;
     // OCR1A = TCNT1 + 4000; // Start in two milli seconds
   #endif
-  #if defined(_RC_MEGA_) 
-    #if !defined(USE_TIMER_5) 
-    TCNT1 = 0;              // clear the timer count 
+  #if defined(_RC_MEGA_)
+    #if !defined(USE_TIMER_5)
+    TCNT1 = 0;              // clear the timer count
     // Initilialise Timer1
     TCCR1A = 0;             // normal counting mode
     TCCR1B = _BV(CS11);     // set prescaler of 8, tick = 0,5us same as in the Servo Lib...
     TIFR1 |= _BV(OCF1A);     // clear any pending interrupts;
     // OCR1A = TCNT1 + 4000; // Start in two milli seconds
     #else
-    TCNT5 = 0;              // clear the timer count 
+    TCNT5 = 0;              // clear the timer count
     // Initilialise Timer1
     TCCR5A = 0;             // normal counting mode
     TCCR5B = _BV(CS51);     // set prescaler of 8, tick = 0,5us same as in the Servo Lib...
@@ -142,25 +142,25 @@ void RCReceive::initInt() {
   if (!_RCReceiverIsInit) {
     // timer 0 don't need to be initialised.
   #ifdef USE_TIMER_1
-    TCNT1 = 0;              // clear the timer count 
+    TCNT1 = 0;              // clear the timer count
     // we are using the general timer 0 for this operation
     // Initilialise Timer1
     TCCR1 = 0x07;             // set prescaler of 64
-    sbi(TIMSK, TOIE1); // Interrupt freischalten  
+    sbi(TIMSK, TOIE1); // Unlock interrupt
   #endif
     _RCReceiverIsInit = true;
   }
 #endif
 }
 
-// Receiver mit Pin verbinden
+// Connect the receiver to the pin
 void RCReceive::attach(uint8_t pin) {
   pinMode(pin, INPUT_PULLUP);
   this->myPin = pin;
   this->isIntMode = false;
 }
 
-// Den aktuell gemittelten Wert holen
+// Get the currently averaged value
 uint8_t RCReceive::getValue() {
   uint16_t all = getMsValue();
   return mMapMsValue(all);
@@ -170,13 +170,13 @@ uint8_t RCReceive::mapMsValue(uint16_t value) {
   return mMapMsValue(value);
 }
 
-// Nullpunkt holen
+// Get zero point
 uint8_t RCReceive::getNP() {
   return this->nullpoint;
 }
 
-// einen neuen Wert vom Empfänger holen
-// Wenn 0 dann empfänger wert ungültig
+// get a new value from the recipient
+// If 0 then recipient value is invalid
 uint8_t RCReceive::poll() {
   lastValue = pulseIn(myPin, HIGH, 25000); // Timeout 100ms
   pushRcValue(lastValue);
@@ -184,12 +184,12 @@ uint8_t RCReceive::poll() {
   return lastValue != 0;
 }
 
-// Fehler aufgetreten
+// Error occurred
 uint8_t RCReceive::hasError() {
   return ((state & ERROR_MASK) > 0);
 }
 
-// Nullpunkt bestimmt
+// zero point determined
 uint8_t RCReceive::hasNP() {
   return (state & HAS_NP) > 0;
 }
@@ -204,7 +204,7 @@ void RCReceive::handleInterrupt() {
   cli();
   hasValue = true;
   if (digitalRead(myPin) ) { 
-    // Positive Flanke
+    // positive edge
 #if defined(_RC_TINY_8_)
   #ifdef USE_TIMER_1
     RcTemp = myMicros(); 
@@ -228,7 +228,7 @@ void RCReceive::handleInterrupt() {
 #endif
   } 
   else {
-    // negative Flanke
+    // negative edge
 #if defined(_RC_TINY_8_)
   #ifdef USE_TIMER_1
     lastValue = (myMicros() - RcTemp); 
@@ -366,7 +366,7 @@ void RCReceive::detachInt() {
 uint16_t RCReceive::getMsValue() {
   if (!hasValue) {
     if ((millis() - lastValueTime) > 100) {
-      // letzter Empfang ist länger als 1 Sekunde her, dann Fehler
+      // last reception was more than 1 second ago, then error
       state += 1;
 	  if ((state & 0x10) > 0) {
 	    state = 1;
@@ -385,24 +385,24 @@ uint16_t RCReceive::getMsValue() {
 
   for (int i = 1; i < stackSize; i++) {
     uint16_t value = myStack.stack[i];
-    // Neuer Höchstwert ?
+    // New maximum?
     if (value > maxValue) {
-      // neuen speichern
+      // save new
       maxValue = value;
     } 
-    // Neuer Niedrigstwert?
+    // New lowest value?
     if (value < minValue) {
-      // neuen speichern
+      // save new
       minValue = value;
     }
     all += value;
   }
 
-  // Höchst und Niedrigstwert wieder abziehen
+  // Subtract the highest and lowest values
   all -= minValue;
   all -= maxValue;
 
-  // Mittelwert bilden
+  // form the mean
   all = all / (stackSize - 2);
   return all;
 }

@@ -22,7 +22,6 @@
 
 const byte PIN_RC = 2; 
 
-// Der Empfänger
 RCReceive rcReceiver;
 
 void setup() {
@@ -32,14 +31,14 @@ void setup() {
 }
 
 void loop() {
-  // Aktuellen RC-Wert lesen
+  // Read current RC value
   rcReceiver.poll();
 
-  // Nullpunktsbestimmung ?
+  // zero point determination?
   if (rcReceiver.hasNP() && !rcReceiver.hasError()) {
     doWork();
   } else if (rcReceiver.hasError()) {
-    // Fehlerbehandlung failsafe oder sowas...
+    // Failure handling failsafe or something ...
   }
 }
 

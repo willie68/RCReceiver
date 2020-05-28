@@ -1,5 +1,5 @@
 /*
-  debug.h - Definition von 2 Debugfunktionen - Version 0.1
+  debug.h - Definition of 2 debug functions - Version 0.1
   Copyright (c) 2012 Wilfried Klaas.  All right reserved.
 
   This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// Program im Debugmodus kompilieren, dann werden zus. Ausgaben auf die serielle Schnittstelle geschrieben.
-// Zum aktivieren der Debug Funktion bitte den Define VOR dem #include "debug.h" in die Hauptdatei eintragen.
+// Compile the program in debug mode, then additional outputs are written to the serial interface.
+// To activate the debug function please enter the define BEFORE the #include "debug.h" in the main file.
 //#define debug
 
 #ifdef debug

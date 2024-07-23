@@ -79,46 +79,46 @@ public:
 
   RCReceive();
 
-  // Connect receiver class with pin
+  // Connect receiver class with pin
   void attach(uint8_t pin);
 
-  // get current averaged value
+  // get current averaged value
   uint8_t getValue();
 
-  // query the new value from the recipient
+  // query the new value from the recipient
   uint8_t poll();
 
-  // Get zero point
+  // Get zero point
   uint8_t getNP();
 
-  // get zero point (in us)
+  // get zero point (in us)
   uint16_t getMSNP();
 
-  // Error status, becomes 1 if more than 3 faulty pulses have been determined by the receiver.
+  // Error status, becomes 1 if more than 3 faulty pulses have been determined by the receiver.
   uint8_t hasError();
 
-  // zero point was determined
+  // zero point was determined
   uint8_t hasNP();
 
-  // Output the last value read
+  // Output the last value read
   unsigned int getLastRCValue();
 
-  // simplification for the interrupt routine
+  // simplification for the interrupt routine
   void handleInterrupt();
 
-  // Assign interrupt mode with internal interrupt routine
+  // Assign interrupt mode with internal interrupt routine
   void attachInt(uint8_t pin);
 
-  // assign your own interrupt routine
+  // assign your own interrupt routine
   void attachInt(void (*handler)(void));
 
-  // Assign pin and own interrupt routine
+  // Assign pin and own interrupt routine
   void attachInt(uint8_t pin, void (*handler)(void));
 
-  // solve the assigned interrupt routine
+  // solve the assigned interrupt routine
   void detachInt();
 
-  // get the current averaged value in us
+  // get the current averaged value in us
   uint16_t getMsValue();
 
   // Map us value in byte value range
@@ -130,8 +130,8 @@ protected:
   uint8_t myPin;
   uint8_t nullpoint;
   uint16_t msNullpoint;
-  // the lower 4 bits indicate the number of errors,
-  // The top bit indicates whether the zero point has been determined.
+  // the lower 4 bits indicate the number of errors,
+  // The top bit indicates whether the zero point has been determined.
   volatile uint8_t state;
   volatile uint16_t RcTemp;
   bool hasValue;
